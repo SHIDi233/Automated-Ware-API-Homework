@@ -1,0 +1,12 @@
+spring:
+  data:
+    redis:
+      host: 8.140.250.103
+      port: 6379
+      password: 123456
+  cache:
+    type: redis
+    redis:
+      use-key-prefix: false
+      cache-null-values: false
+      time-to-live: 10s

@@ -1,5 +1,6 @@
 package com.studio314.autowaremanagesys.controller;
 
+import com.studio314.autowaremanagesys.utils.Result;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,5 +13,10 @@ public class UserController {
     @PreAuthorize("hasRole('user')")
     public String queryStudent() {
         return "Query success";
+    }
+
+    @GetMapping("/testLimit")
+    public Result testLimit() {
+        return Result.success("testLimit");
     }
 }
