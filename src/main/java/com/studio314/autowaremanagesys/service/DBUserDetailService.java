@@ -22,13 +22,18 @@ public class DBUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
 
+        System.out.println(mail);
         MyUser myUser = userMapper.getUserByMail(mail);
+        System.out.println(myUser);
+        if(myUser == null){
+            throw new UsernameNotFoundException(mail);
+        }
 
         // 模拟从数据库获取了用户信息，并封装成UserDetails对象
         UserDetails user = User
                 .withUsername(myUser.getMail())
-                .password(passwordEncoder.encode(myUser.getPassword()))
-                .roles("user")
+                .password(passwordEncoder.encode("111"))
+                .roles("admin")
                 .build();
 
         return user;
