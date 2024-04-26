@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 public @interface Limiting {
 
     // 默认每秒放入桶中的token
-    double limitNum() default 20;
+    double limitNum() default 1;
 
     String name() default "";
 }
