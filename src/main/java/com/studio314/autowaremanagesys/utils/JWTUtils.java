@@ -1,9 +1,11 @@
 package com.studio314.autowaremanagesys.utils;
 
+import java.util.Arrays;
 import java.util.Map;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * Jwt工具类
@@ -15,7 +17,7 @@ public class JWTUtils
     /**
      * 令牌秘钥
      */
-    public final static String secret = "abcdefghijklmnopqrstuvwxyz";
+    public final static String secret = "HfkjksFKLJISJFKLFKWJFQFIQWIOFJQOFFQGGSDGFFJIQOEUFIEJFIOQWEFHFQOK5FKOIQWUFFEFE423FIQEOFJHUEWHFKASKDLQWJIFSJDJKFHJIJWO";
 
     /**
      * 用户ID字段

@@ -1,14 +1,20 @@
 package com.studio314.autowaremanagesys.controller;
 
+import com.studio314.autowaremanagesys.service.LoginService;
 import com.studio314.autowaremanagesys.utils.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
+
+    @Autowired
+    LoginService loginService;
+
     @GetMapping("/query")
     @PreAuthorize("hasRole('user')")
     public String queryStudent() {
@@ -18,5 +24,24 @@ public class UserController {
     @GetMapping("/testLimit")
     public Result testLimit() {
         return Result.success("testLimit");
+    }
+
+    @PostMapping("/register")
+    public Result register(@RequestParam("name") String name,
+                           @RequestParam("mail") String mail,
+                           @RequestParam("password") String password){
+        return loginService.register(name, mail, password);
+    }
+
+    @PostMapping("/login")
+    public Result login(@RequestParam("mail") String mail, @RequestParam("password") String password){
+        log.info("用户尝试登录：" + mail);
+        return loginService.login(mail, password);
+    }
+
+    @PostMapping("/loginTest")
+    public Result loginTest(){
+        log.info("用户尝试登录：");
+        return Result.success();
     }
 }
