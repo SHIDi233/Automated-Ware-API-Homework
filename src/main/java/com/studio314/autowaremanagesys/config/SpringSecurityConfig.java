@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,11 +31,18 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
-        http    .authorizeHttpRequests(request -> {
-                    request.anyRequest().permitAll();
-//                    request.requestMatchers( "/1" , "/signup").permitAll();
+        http
+                .csrf((csrf) -> csrf
+                    .ignoringRequestMatchers("/signup")
+                )
+                .sessionManagement((session) -> session
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(request -> {
+//                    request.anyRequest().permitAll();
+                    request.requestMatchers( "/1" , "/signup").permitAll();
 //                    request.requestMatchers("/signup/signup").permitAll();
-//                    request.anyRequest().authenticated();
+                    request.anyRequest().authenticated();
                 })
 
                 .addFilterBefore(responseFilter, WebAsyncManagerIntegrationFilter.class) // 在 Web...过滤器之前添加过滤器
@@ -42,9 +50,9 @@ public class SpringSecurityConfig {
                     request.successHandler(handler)
                             .failureHandler(handler);
                 })
-//                .exceptionHandling(request -> { // 添加访问拒绝处理
-//                    request.accessDeniedHandler(handler);
-//                })
+                .exceptionHandling(request -> { // 添加访问拒绝处理
+                    request.accessDeniedHandler(handler);
+                })
                 .logout(request -> { // 添加退出处理器
                     request.logoutSuccessHandler(handler)
                             .addLogoutHandler(handler);
