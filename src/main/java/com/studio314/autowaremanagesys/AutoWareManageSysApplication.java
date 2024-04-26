@@ -9,9 +9,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching
 public class AutoWareManageSysApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(AutoWareManageSysApplication.class, args);
     }
-
 }
