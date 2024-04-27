@@ -19,7 +19,7 @@ public class CargoController {
     CargoService cs;
 
     //查看全部货物种类
-    @GetMapping("/")
+    @GetMapping("")
     public Result queryAllCargos() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Cargo> list = cs.getAllCargos();
@@ -34,8 +34,7 @@ public class CargoController {
     }
 
     //增加货物根种类
-    @PostMapping("/")
-    @PreAuthorize("hasRole('admin')")
+    @PostMapping("")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description) {
         cs.addCargo(name,description);
@@ -44,38 +43,37 @@ public class CargoController {
 
     //增加货物子种类
     @PostMapping("/{cargoID}")
-    @PreAuthorize("hasRole('admin')")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description,
-                           @RequestParam("cargoID") int parent) {
+                           @PathVariable int cargoID) {
+        int parent = cargoID;
         cs.addCargo(name,description,parent);
         return Result.success();
     }
 
     //修改货物种类
     @PutMapping("/{cargoID}")
-    @PreAuthorize("hasRole('admin')")
     public Result updateCargo(@RequestParam("cargoName") String name,
                               @RequestParam("cargoDescription") String description,
-                              @RequestParam("cargoID") int cargoID) {
+                              @PathVariable int cargoID) {
         cs.updateCargo(cargoID ,name,description);
         return Result.success();
     }
 
     //删除货物种类
     @DeleteMapping("/{cargoID}")
-    @PreAuthorize("hasRole('admin')")
-    public Result deleteCargo(@RequestParam("cargoID") int cargoID) {
+    public Result deleteCargo(@PathVariable int cargoID) {
         cs.deleteCargo(cargoID);
         return Result.success();
     }
 
 
     private List<Map<String, Object>> getCargoList(int cargoID, List<Cargo> list){
+        System.out.println(list);
         List<Map<String, Object>> result = new ArrayList<>();
         int flag=0;
         for(int i=0; i<list.size(); i++){
-            if(list.get(i).getCargoId()==cargoID){
+            if(list.get(i).getParent()==cargoID){
                 Map<String, Object> res = new HashMap<>();
                 res.put("id", list.get(i).getCargoId());
                 res.put("name", list.get(i).getCargoName());

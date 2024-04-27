@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class CargiServiceImpl implements CargoService {
+public class CargoServiceImpl implements CargoService {
     @Autowired
     CargoMapper cm;
 

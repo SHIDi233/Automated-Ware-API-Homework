@@ -13,4 +13,5 @@ public class Cargo implements Serializable {
     private int cargoId;
     private String cargoName;
     private String cargoDescription;
+    private int parent;
 }

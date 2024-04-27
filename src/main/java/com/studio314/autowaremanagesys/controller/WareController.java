@@ -1,15 +1,29 @@
 package com.studio314.autowaremanagesys.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.studio314.autowaremanagesys.service.WareService;
+import com.studio314.autowaremanagesys.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/wares")
 public class WareController {
-    @PostMapping("/")
-    public void create(@RequestParam("wareName") String wareName){
 
+    @Autowired
+    WareService ws;
+
+    @PostMapping("/")
+    public Result create(@RequestParam("wareName") String wareName){
+        return ws.create(wareName);
+    }
+
+    @GetMapping("/")
+    public Result query(){
+        return ws.selectAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public Result delete(@RequestParam("id") int id){
+        return ws.delete(id);
     }
 }

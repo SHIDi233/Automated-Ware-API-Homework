@@ -16,12 +16,12 @@ public interface CargoMapper {
     @Select("select * from Cargo where cargoID=#{id} and isDel=FALSE")
     Cargo select(int id);
 
-    @Insert("insert into Cargo(cargoName,description,parent) values(#{cargoName},#{description},#{parent})")
+    @Insert("insert into Cargo(cargoName,cargoDescription,parent) values(#{cargoName},#{cargoDescription},#{parent})")
     void insert(String cargoName, String cargoDescription, int parent);
 
-    @Update("update Cargo set cargoName=#{cargoName},description=#{description} where cargoID=#{cargoID}) and isDel=FALSE")
+    @Update("update Cargo set cargoName=#{cargoName},cargoDescription=#{cargoDescription} where cargoID=#{cargoID} and isDel=FALSE")
     void update(int cargoID, String cargoName, String cargoDescription);
 
-    @Update("update Cargo set isDel=TRUE where cargoID=#{cargoID}) and isDel=FALSE")
+    @Update("update Cargo set isDel=TRUE where cargoID=#{cargoID} and isDel=FALSE")
     void delete(int cargoID);
 }
