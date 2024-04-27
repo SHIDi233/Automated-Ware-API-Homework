@@ -14,8 +14,8 @@ public class WareServiceImpl implements WareService {
     WareMapper wm;
 
     @Override
-    public Result create(String wareName) {
-        wm.insert(wareName);
+    public Result create(int uID, String wareName) {
+        wm.insert(uID, wareName);
         return Result.success();
     }
 

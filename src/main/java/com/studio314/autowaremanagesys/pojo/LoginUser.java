@@ -16,11 +16,6 @@ public class LoginUser implements UserDetails {
     private MyUser user;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
     public String getPassword() {
         return user.getPassword();
     }
@@ -48,5 +43,10 @@ public class LoginUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return user.getAuthorities();
     }
 }
