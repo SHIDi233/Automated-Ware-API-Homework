@@ -12,18 +12,18 @@ public class WareController {
     @Autowired
     WareService ws;
 
-    @PostMapping("/")
+    @PostMapping("")
     public Result create(@RequestParam("wareName") String wareName){
         return ws.create(wareName);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public Result query(){
         return ws.selectAll();
     }
 
     @DeleteMapping("/{id}")
-    public Result delete(@RequestParam("id") int id){
+    public Result delete(@PathVariable int id){
         return ws.delete(id);
     }
 }
