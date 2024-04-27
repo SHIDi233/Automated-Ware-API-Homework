@@ -140,12 +140,11 @@ public class JWTUtils
      */
     public static String getValue(Claims claims, String key)
     {
-        Object value = claims;
-        String defaultValue = key;
+        Object value = claims.get(key);
 
         if (null == value)
         {
-            return defaultValue;
+            return null;
         }
         if (value instanceof String)
         {

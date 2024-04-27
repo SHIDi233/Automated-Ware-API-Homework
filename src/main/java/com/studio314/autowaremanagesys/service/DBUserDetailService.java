@@ -1,5 +1,6 @@
 package com.studio314.autowaremanagesys.service;
 
+import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
 import com.studio314.autowaremanagesys.mapper.UserMapper;
 import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.pojo.MyUser;
@@ -10,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DBUserDetailService implements UserDetailsService {
@@ -28,6 +32,9 @@ public class DBUserDetailService implements UserDetailsService {
         if(myUser == null){
             throw new UsernameNotFoundException(mail);
         }
+        List<SecurityGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SecurityGrantedAuthority(myUser.getRole()));
+        myUser.setAuthorities(authorities);
 
         return new LoginUser(myUser);
     }

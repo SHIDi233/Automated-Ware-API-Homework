@@ -10,8 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface WareMapper {
-    @Insert("insert into Ware(wareName) values(#{wareName})")
-    void insert(String wareName);
+    @Insert("insert into Ware(creator, wareName) values(#{uID}, #{wareName})")
+    void insert(int uID, String wareName);
 
     @Select("select * from Ware where isDel=FALSE")
     List<Ware> getAll();
