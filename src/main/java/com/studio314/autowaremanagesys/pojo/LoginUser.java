@@ -24,7 +24,7 @@ public class LoginUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if(user != null) {
-            authorities.add(new SecurityGrantedAuthority(user.getRole()));
+            authorities.add(new SecurityGrantedAuthority("ROLE_" + user.getRole()));
         }
         System.out.println(user);
         return authorities;
