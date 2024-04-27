@@ -19,6 +19,6 @@ public class MyUser implements Serializable {
     private String mail;
     private String role;
 
-    List<SecurityGrantedAuthority> authorities;
+    transient List<SecurityGrantedAuthority> authorities;
 
 }

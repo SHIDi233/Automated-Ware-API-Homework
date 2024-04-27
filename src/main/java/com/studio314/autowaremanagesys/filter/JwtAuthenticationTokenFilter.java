@@ -38,8 +38,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         //解析token
         String userId = JWTUtils.getUserId(token);
+        System.out.println("userId:"+userId);
         //从redis中获取用户信息
-        userId = userId.substring(userId.indexOf("=") + 1 , userId.indexOf("}"));
+//        userId = userId.substring(userId.indexOf("=") + 1 , userId.indexOf("}"));
         String redisKey = "login:" + userId;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
         if (Objects.isNull(loginUser)){
