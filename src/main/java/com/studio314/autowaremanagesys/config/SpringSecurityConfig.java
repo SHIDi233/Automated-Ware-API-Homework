@@ -2,6 +2,7 @@ package com.studio314.autowaremanagesys.config;
 
 import com.studio314.autowaremanagesys.component.ResponseFilter;
 import com.studio314.autowaremanagesys.component.SpringSecurityHandler;
+import com.studio314.autowaremanagesys.component.UserPermissionEvaluator;
 import com.studio314.autowaremanagesys.filter.JwtAuthenticationTokenFilter;
 import com.studio314.autowaremanagesys.service.DBUserDetailService;
 import jakarta.annotation.Resource;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -42,24 +45,26 @@ public class SpringSecurityConfig {
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    @Autowired
+    private UserPermissionEvaluator upe;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(request -> {
 //                    request.anyRequest().permitAll();
-                    request.requestMatchers(HttpMethod.GET , "/user/login").permitAll();
-                    request.requestMatchers(HttpMethod.POST , "/user/register").permitAll();
-                    request.requestMatchers(HttpMethod.POST , "/user/loginTest").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/user/login").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/user/register").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/user/loginTest").permitAll();
 
 //                    request.requestMatchers("/signup/signup").permitAll();
                     request.anyRequest().authenticated();
                 })
-
                 .addFilterBefore(responseFilter, WebAsyncManagerIntegrationFilter.class) // 在 Web...过滤器之前添加过滤器
                 .formLogin(request -> { // 添加登录处理器
                     request.successHandler(handler)
@@ -82,8 +87,15 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    static MethodSecurityExpressionHandler methodSecurityExpressionHandler(UserPermissionEvaluator permissionEvaluator) {
+        DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+        handler.setPermissionEvaluator(permissionEvaluator);
+        return handler;
     }
 }
 
