@@ -1,12 +1,17 @@
 package com.studio314.autowaremanagesys.pojo;
 
+import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,6 +19,16 @@ import java.util.Collection;
 public class LoginUser implements UserDetails {
 
     private MyUser user;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if(user != null) {
+            authorities.add(new SecurityGrantedAuthority(user.getRole()));
+        }
+        System.out.println(user);
+        return authorities;
+    }
 
     @Override
     public String getPassword() {
@@ -45,8 +60,4 @@ public class LoginUser implements UserDetails {
         return true;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthorities();
-    }
 }

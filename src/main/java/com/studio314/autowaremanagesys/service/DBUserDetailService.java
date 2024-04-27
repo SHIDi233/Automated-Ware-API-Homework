@@ -32,9 +32,6 @@ public class DBUserDetailService implements UserDetailsService {
         if(myUser == null){
             throw new UsernameNotFoundException(mail);
         }
-        List<SecurityGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SecurityGrantedAuthority(myUser.getRole()));
-        myUser.setAuthorities(authorities);
 
         return new LoginUser(myUser);
     }

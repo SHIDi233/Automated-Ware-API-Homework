@@ -12,14 +12,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -43,13 +47,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 //        userId = userId.substring(userId.indexOf("=") + 1 , userId.indexOf("}"));
         String redisKey = "login:" + userId;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
+        System.out.println(loginUser);
         if (Objects.isNull(loginUser)){
             throw new RuntimeException("用户未登录！");
         }
         //存入SecurityContextHolder
         // TODO 获取权限信息封装到Authentication中
+        //获取权限信息
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUser,null,null);
+                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         //放行
         filterChain.doFilter(request,response);

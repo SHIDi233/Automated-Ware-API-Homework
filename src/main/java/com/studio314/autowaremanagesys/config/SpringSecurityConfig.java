@@ -56,6 +56,7 @@ public class SpringSecurityConfig {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> {
 //                    request.anyRequest().permitAll();
                     request.requestMatchers(HttpMethod.GET, "/user/login").permitAll();
@@ -77,7 +78,6 @@ public class SpringSecurityConfig {
                     request.logoutSuccessHandler(handler)
                             .addLogoutHandler(handler);
                 });
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
