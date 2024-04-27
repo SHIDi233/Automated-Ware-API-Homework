@@ -1,8 +1,11 @@
 package com.studio314.autowaremanagesys.component;
 
+import com.studio314.autowaremanagesys.pojo.LoginUser;
+import com.studio314.autowaremanagesys.pojo.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -17,28 +20,14 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
      * @Return boolean 是否通过
      */
     @Override
-    public boolean hasPermission(Authentication authentication, Object targetUrl, Object permission,Object permission2) {
-        authentication.getPrincipal();
-//        Object principal = authentication.getPrincipal();
-//        boolean hasPermission = false;
-//        if(principal != null && principal instanceof UserDetails){
-//            String name=((UserDetails) principal).getUsername();
-//            SysUser sysUser=userRepository.findByName(name);
-//            Set<String> permissions = new HashSet<>();
-//            for(SysRole role : sysUser.getRoles()){
-//                for(SysPermission sysPermission:role.getPermissions()){
-//                    permissions.add(sysPermission.getName());
-//                }
-//            }
-//
-//            if (permissions.contains(permission.toString())){
-//                return true;
-//            }
-//        }
+    public boolean hasPermission(Authentication authentication, Object targetUrl, Object permission) {
+        Object principal = authentication.getPrincipal();
+        int id=((LoginUser) principal).getUser().getUID();
+
         System.out.println("UserPermissionEvaluator1 hasPermission!!!");
+        System.out.println(id);
         System.out.println(targetUrl);
         System.out.println(permission);
-        System.out.println(permission2);
         return true;
     }
 

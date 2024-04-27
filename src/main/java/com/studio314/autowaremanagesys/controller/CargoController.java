@@ -20,7 +20,7 @@ public class CargoController {
 
     //查看全部货物种类
     @GetMapping("")
-    @PreAuthorize("hasPermission('query','111')")
+    @PreAuthorize("hasPermission('cargo','query')")
     public Result queryAllCargos() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Cargo> list = cs.getAllCargos();
