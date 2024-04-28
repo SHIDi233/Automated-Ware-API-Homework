@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/wares/{wID}/auth")
 public class EmployeeController {
@@ -27,15 +29,17 @@ public class EmployeeController {
     @PostMapping
     @PreAuthorize("hasPermission(#wID,'controller')")
     @CacheEvict(cacheNames = "employee", key = "'employee:'+#wID")
-    public Result addEmployee(@PathVariable int wID,@RequestParam("email") String email,@RequestParam("role") String role){
+    public Result addEmployee(@PathVariable int wID, @RequestBody HashMap body){
+        String email = (String) body.get("email");
+        String role = (String) body.get("role");
         return es.addEmployee(wID,email,role);
     }
 
     //删除员工
-    @DeleteMapping
+    @DeleteMapping("/{uID}")
     @PreAuthorize("hasPermission(#wID,'controller')")
     @CacheEvict(cacheNames = "employee", key = "'employee:'+#wID")
-    public Result deleteEmployee(@PathVariable int wID,@RequestParam("uID") int uID){
+    public Result deleteEmployee(@PathVariable int uID,@PathVariable int wID){
         return es.deleteEmployee(wID,uID);
     }
 }

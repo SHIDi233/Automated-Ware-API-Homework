@@ -10,6 +10,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/wares/{wID}/stock")
 public class StockController {
@@ -39,7 +41,9 @@ public class StockController {
     @PostMapping
     @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
     @CacheEvict(cacheNames = "stock", key = "'stock:'+#wID")
-    public Result create(@PathVariable("wID") int wID, @RequestParam("cargoID") int cargoID, @RequestParam("stockNum") int stockNum, HttpServletRequest request){
+    public Result create(@RequestBody HashMap body, @PathVariable("wID") int wID, HttpServletRequest request){
+        int cargoID = (int)body.get("cargoID");
+        int stockNum = (int)body.get("stockNum");
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
         if (userIdStr == null) {
@@ -59,7 +63,9 @@ public class StockController {
     @PutMapping
     @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
     @CacheEvict(cacheNames = "stock", key = "'stock:'+#wID")
-    public Result out(@PathVariable("wID") int wID, @RequestParam("cargoID") int cargoID, @RequestParam("stockNum") int stockNum, HttpServletRequest request){
+    public Result out(@RequestBody HashMap body,@PathVariable("wID") int wID, HttpServletRequest request){
+        int cargoID = (int)body.get("cargoID");
+        int stockNum = (int)body.get("stockNum");
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
         if (userIdStr == null) {
