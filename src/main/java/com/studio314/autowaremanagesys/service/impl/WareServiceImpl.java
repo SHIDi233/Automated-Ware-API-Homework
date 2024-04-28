@@ -20,8 +20,8 @@ public class WareServiceImpl implements WareService {
     }
 
     @Override
-    public Result selectAll(){
-        return Result.success(wm.getAll());
+    public Result selectAll(int uID){
+        return Result.success(wm.getAll(uID));
     }
 
     //查库存

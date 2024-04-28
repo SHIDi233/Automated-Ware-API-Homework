@@ -21,7 +21,6 @@ public class CargoController {
     //查看全部货物种类
     @GetMapping("")
     @PreAuthorize("hasRole('admin')")
-//    @PreAuthorize("hasPermission('cargo','query')")
     public Result queryAllCargos() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Cargo> list = cs.getAllCargos();
@@ -37,6 +36,7 @@ public class CargoController {
 
     //增加货物根种类
     @PostMapping("")
+    @PreAuthorize("hasRole('admin')")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description) {
         cs.addCargo(name,description);
@@ -45,6 +45,7 @@ public class CargoController {
 
     //增加货物子种类
     @PostMapping("/{cargoID}")
+    @PreAuthorize("hasRole('admin')")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description,
                            @PathVariable int cargoID) {
@@ -55,6 +56,7 @@ public class CargoController {
 
     //修改货物种类
     @PutMapping("/{cargoID}")
+    @PreAuthorize("hasRole('admin')")
     public Result updateCargo(@RequestParam("cargoName") String name,
                               @RequestParam("cargoDescription") String description,
                               @PathVariable int cargoID) {
@@ -64,6 +66,7 @@ public class CargoController {
 
     //删除货物种类
     @DeleteMapping("/{cargoID}")
+    @PreAuthorize("hasRole('admin')")
     public Result deleteCargo(@PathVariable int cargoID) {
         cs.deleteCargo(cargoID);
         return Result.success();

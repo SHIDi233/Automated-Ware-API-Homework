@@ -5,7 +5,7 @@ import com.studio314.autowaremanagesys.utils.Result;
 public interface WareService {
     Result create(int uID, String wareName);
 
-    Result selectAll();
+    Result selectAll(int uID);
 
     Result select(int id);
 

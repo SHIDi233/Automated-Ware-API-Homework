@@ -1,5 +1,7 @@
 package com.studio314.autowaremanagesys.component;
 
+import com.alibaba.fastjson2.JSON;
+import com.studio314.autowaremanagesys.utils.Result;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +37,7 @@ public class SpringSecurityHandler
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         PrintWriter writer = response.getWriter();
-        writer.println("访问被拒绝");
+        writer.println(JSON.toJSON(Result.error("无权限")));
     }
 
     @Override

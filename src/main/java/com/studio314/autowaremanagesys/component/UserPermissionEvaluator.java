@@ -1,5 +1,7 @@
 package com.studio314.autowaremanagesys.component;
 
+import com.studio314.autowaremanagesys.mapper.EmployeeMapper;
+import com.studio314.autowaremanagesys.mapper.WareMapper;
 import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.pojo.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,11 @@ import java.io.Serializable;
 @Component
 public class UserPermissionEvaluator implements PermissionEvaluator {
 
+    @Autowired
+    WareMapper wm;
+
+    @Autowired
+    EmployeeMapper em;
 
     /**
      * hasPermission鉴权方法
@@ -22,13 +29,30 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication, Object targetUrl, Object permission) {
         Object principal = authentication.getPrincipal();
-        int id=((LoginUser) principal).getUser().getUID();
+        int userID=((LoginUser) principal).getUser().getUID();
 
         System.out.println("UserPermissionEvaluator1 hasPermission!!!");
-        System.out.println(id);
+        System.out.println(userID);
         System.out.println(targetUrl);
         System.out.println(permission);
-        return true;
+
+        //搜索仓库表
+        if(permission.equals("controller")){
+            System.out.println(wm.checkCreator((int)targetUrl,userID));
+            if(wm.checkCreator((int)targetUrl,userID)!=null)
+                return true;
+            else
+                return false;
+        }
+        //搜索大表
+        else if(permission.equals("user")){
+            if(em.check(userID,(int)targetUrl)!=null)
+                return true;
+            else
+                return false;
+        }
+
+        return false;
     }
 
     @Override

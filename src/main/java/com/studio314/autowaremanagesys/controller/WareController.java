@@ -5,15 +5,17 @@ import com.studio314.autowaremanagesys.utils.JWTUtils;
 import com.studio314.autowaremanagesys.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/wares")
+@RequestMapping("/{uID}/wares")
 public class WareController {
 
     @Autowired
     WareService ws;
 
+    //创建仓库
     @PostMapping("")
     public Result create(@RequestParam("wareName") String wareName, HttpServletRequest request){
         String token = request.getHeader("token");
@@ -25,12 +27,15 @@ public class WareController {
         return ws.create(userId, wareName);
     }
 
+    //获取仓库列表
     @GetMapping("")
-    public Result query(){
-        return ws.selectAll();
+    public Result query(@PathVariable int uID){
+        return ws.selectAll(uID);
     }
 
+    //删除仓库
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasPermission(#id,'controller')")
     public Result delete(@PathVariable int id){
         return ws.delete(id);
     }
