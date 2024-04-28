@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cargo implements Serializable {
-    private int cargoId;
+    private int cargoID;
     private String cargoName;
     private String cargoDescription;
     private int parent;

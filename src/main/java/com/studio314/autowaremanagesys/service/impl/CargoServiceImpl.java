@@ -26,13 +26,23 @@ public class CargoServiceImpl implements CargoService {
     }
 
     @Override
-    public void addCargo(String cargoName, String cargoDescription){
-        cm.insert(cargoName,cargoDescription,-1);
+    public int addCargo(String cargoName, String cargoDescription){
+        Cargo c = new Cargo();
+        c.setCargoName(cargoName);
+        c.setCargoDescription(cargoDescription);
+        c.setParent(-1);
+        cm.insert(c);
+        return c.getCargoID();
     }
 
     @Override
-    public void addCargo(String cargoName, String cargoDescription, int parent){
-        cm.insert(cargoName, cargoDescription, parent);
+    public int addCargo(String cargoName, String cargoDescription, int parent){
+        Cargo c = new Cargo();
+        c.setCargoName(cargoName);
+        c.setCargoDescription(cargoDescription);
+        c.setParent(parent);
+        cm.insert(c);
+        return c.getCargoID();
     }
 
     @Override

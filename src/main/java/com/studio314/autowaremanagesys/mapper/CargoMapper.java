@@ -1,10 +1,7 @@
 package com.studio314.autowaremanagesys.mapper;
 
 import com.studio314.autowaremanagesys.pojo.Cargo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -16,8 +13,9 @@ public interface CargoMapper {
     @Select("select * from Cargo where cargoID=#{id} and isDel=FALSE")
     Cargo select(int id);
 
+    @Options(useGeneratedKeys = true, keyProperty = "cargoID")
     @Insert("insert into Cargo(cargoName,cargoDescription,parent) values(#{cargoName},#{cargoDescription},#{parent})")
-    void insert(String cargoName, String cargoDescription, int parent);
+    void insert(Cargo cargo);
 
     @Update("update Cargo set cargoName=#{cargoName},cargoDescription=#{cargoDescription} where cargoID=#{cargoID} and isDel=FALSE")
     void update(int cargoID, String cargoName, String cargoDescription);

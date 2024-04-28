@@ -42,8 +42,8 @@ public class CargoController {
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description) {
-        cs.addCargo(name,description);
-        return Result.success();
+        int i = cs.addCargo(name, description);
+        return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
     //增加货物子种类
@@ -55,7 +55,8 @@ public class CargoController {
                            @PathVariable int cargoID) {
         int parent = cargoID;
         cs.addCargo(name,description,parent);
-        return Result.success();
+        int i = cs.addCargo(name, description);
+        return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
     //修改货物种类
@@ -86,10 +87,10 @@ public class CargoController {
         for(int i=0; i<list.size(); i++){
             if(list.get(i).getParent()==cargoID){
                 Map<String, Object> res = new HashMap<>();
-                res.put("id", list.get(i).getCargoId());
+                res.put("id", list.get(i).getCargoID());
                 res.put("name", list.get(i).getCargoName());
                 res.put("description", list.get(i).getCargoDescription());
-                res.put("childrenTypes", getCargoList(list.get(i).getCargoId(), list));
+                res.put("childrenTypes", getCargoList(list.get(i).getCargoID(), list));
                 flag++;
                 result.add(res);
             }
