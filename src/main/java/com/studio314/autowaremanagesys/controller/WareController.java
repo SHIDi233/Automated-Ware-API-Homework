@@ -9,6 +9,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/wares")
 public class WareController {
@@ -18,7 +20,8 @@ public class WareController {
 
     //创建仓库
     @PostMapping("")
-    public Result create(@RequestParam("wareName") String wareName, HttpServletRequest request){
+    public Result create(@RequestBody HashMap body,HttpServletRequest request){
+        String wareName = (String)body.get("wareName");
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
         if (userIdStr == null){
@@ -43,7 +46,13 @@ public class WareController {
     //删除仓库
     @DeleteMapping("/{id}")
     @PreAuthorize("hasPermission(#id,'controller')")
-    public Result delete(@PathVariable int id){
-        return ws.delete(id);
+    public Result delete(@PathVariable int id,HttpServletRequest request){
+        String token = request.getHeader("token");
+        String userIdStr = JWTUtils.getUserId(token);
+        if (userIdStr == null){
+            return Result.error("token错误");
+        }
+        int uID = Integer.parseInt(userIdStr);
+        return ws.delete(id,uID);
     }
 }

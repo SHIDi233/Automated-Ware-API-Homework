@@ -7,6 +7,6 @@ public interface WareService {
 
     Result selectAll(int uID);
 
-    Result delete(int id);
+    Result delete(int id,int uID);
 
 }

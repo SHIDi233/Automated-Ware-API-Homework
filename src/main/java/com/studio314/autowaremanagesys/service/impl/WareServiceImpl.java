@@ -40,7 +40,7 @@ public class WareServiceImpl implements WareService {
 
     @Override
     @CacheEvict(cacheNames = "wares", key = "'wares:'+#uID")
-    public Result delete(int id){
+    public Result delete(int id,int uID){
         wm.delete(id);
         return Result.success();
     }

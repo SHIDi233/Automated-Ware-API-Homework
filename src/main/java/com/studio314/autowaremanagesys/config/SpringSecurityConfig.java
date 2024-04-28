@@ -59,7 +59,7 @@ public class SpringSecurityConfig {
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> {
 //                    request.anyRequest().permitAll();
-                    request.requestMatchers(HttpMethod.GET, "/user/login").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/user/login").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/user/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/user/loginTest").permitAll();
 

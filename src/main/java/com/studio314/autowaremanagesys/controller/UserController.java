@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -18,23 +20,18 @@ public class UserController {
     LoginService loginService;
 
     @PostMapping("/register")
-    public Result register(@RequestParam("name") String name,
-                           @RequestParam("mail") String mail,
-                           @RequestParam("password") String password){
+    public Result register(@RequestBody HashMap body){
+        String name = (String) body.get("name");
+        String mail = (String) body.get("mail");
+        String password = (String) body.get("password");
         return loginService.register(name, mail, password);
     }
 
-    @GetMapping("/login")
-    public Result login(@RequestParam("mail") String mail, @RequestParam("password") String password) {
+    @PostMapping("/login")
+    public Result login(@RequestBody HashMap body) {
+        String mail = (String) body.get("mail");
+        String password = (String) body.get("password");
         log.info("用户尝试登录：" + mail);
         return loginService.login(mail, password);
     }
-
-//    @PostMapping("/loginTest")
-//    public Result loginTest(HttpServletRequest request){
-//        String token = request.getHeader("token");
-//        JWTUtils.getUserId(token);
-//        log.info("用户尝试登录：");
-//        return Result.success();
-//    }
 }

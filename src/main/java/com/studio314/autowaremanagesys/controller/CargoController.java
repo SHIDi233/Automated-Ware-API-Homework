@@ -40,8 +40,9 @@ public class CargoController {
     @PostMapping("")
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
-    public Result addCargo(@RequestParam("cargoName") String name,
-                           @RequestParam("cargoDescription") String description) {
+    public Result addCargo(@RequestBody HashMap body) {
+        String name = (String)body.get("cargoName");
+        String description = (String)body.get("cargoDescription");
         int i = cs.addCargo(name, description);
         return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
@@ -50,9 +51,9 @@ public class CargoController {
     @PostMapping("/{cargoID}")
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
-    public Result addCargo(@RequestParam("cargoName") String name,
-                           @RequestParam("cargoDescription") String description,
-                           @PathVariable int cargoID) {
+    public Result addCargo(@RequestBody HashMap body,@PathVariable int cargoID) {
+        String name = (String)body.get("cargoName");
+        String description = (String)body.get("cargoDescription");
         int parent = cargoID;
         cs.addCargo(name,description,parent);
         int i = cs.addCargo(name, description);
@@ -63,9 +64,10 @@ public class CargoController {
     @PutMapping("/{cargoID}")
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
-    public Result updateCargo(@RequestParam("cargoName") String name,
-                              @RequestParam("cargoDescription") String description,
+    public Result updateCargo(@RequestBody HashMap body,
                               @PathVariable int cargoID) {
+        String name = (String)body.get("cargoName");
+        String description = (String)body.get("cargoDescription");
         cs.updateCargo(cargoID ,name,description);
         return Result.success();
     }
