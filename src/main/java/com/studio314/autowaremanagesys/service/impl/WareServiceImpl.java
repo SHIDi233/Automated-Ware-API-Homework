@@ -1,6 +1,7 @@
 package com.studio314.autowaremanagesys.service.impl;
 
 import com.studio314.autowaremanagesys.mapper.WareMapper;
+import com.studio314.autowaremanagesys.pojo.Ware;
 import com.studio314.autowaremanagesys.service.WareService;
 import com.studio314.autowaremanagesys.utils.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 @Service
 @Slf4j
@@ -18,8 +21,15 @@ public class WareServiceImpl implements WareService {
     @Override
     @CacheEvict(cacheNames = "wares", key = "'wares:'+#uID")
     public Result create(int uID, String wareName) {
-        wm.insert(uID, wareName);
-        return Result.success();
+        Ware ware = new Ware();
+        ware.setWareName(wareName);
+        ware.setCreator(uID);
+        wm.insert(ware);
+        return Result.success(new HashMap<>() {
+            {
+                put("wareID", ware.getWareID());
+            }
+        });
     }
 
     @Override

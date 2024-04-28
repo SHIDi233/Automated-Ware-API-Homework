@@ -12,4 +12,5 @@ import java.io.Serializable;
 public class Ware implements Serializable {
     private int wareID;
     private String wareName;
+    private int creator;
 }
