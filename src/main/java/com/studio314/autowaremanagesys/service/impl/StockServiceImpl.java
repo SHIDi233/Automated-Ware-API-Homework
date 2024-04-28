@@ -7,6 +7,8 @@ import com.studio314.autowaremanagesys.pojo.Stock;
 import com.studio314.autowaremanagesys.service.StockService;
 import com.studio314.autowaremanagesys.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +23,7 @@ public class StockServiceImpl implements StockService {
     CargoMapper cargoMapper;
 
     @Override
+    @Cacheable(cacheNames = "waresCargo", key = "#wID")
     public Result queryAllStocks(int wID) {
         List<Stock> stocks = stockMapper.selectAllStocks(wID);
         List<Map<String, Object>> res = new ArrayList<>();
@@ -39,6 +42,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "waresCargo", key = "#wID")
     public Result createStock(int wID, int cargoID, int stockNum) {
 
         if (stockNum <= 0) {
@@ -61,6 +65,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "waresCargo", key = "#wID")
     public Result outStock(int wID, int cargoID, int stockNum) {
         if (stockNum <= 0) {
             return Result.error("数量必须大于0");

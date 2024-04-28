@@ -1,9 +1,11 @@
 package com.studio314.autowaremanagesys.utils;
 
+import java.io.Serializable;
+
 /**
  * 统一响应结果封装类
  */
-public class Result {
+public class Result implements Serializable {
     private Integer code ;//1 成功 , 0 失败
     private String msg; //提示信息
     private Object data; //数据 data

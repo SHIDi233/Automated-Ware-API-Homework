@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ware implements Serializable {
-    private int wareID;
-    private String wareName;
+public class Employee implements Serializable {
+    private int uID;
+    private String role;
 }

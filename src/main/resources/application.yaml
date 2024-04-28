@@ -9,4 +9,4 @@ spring:
     redis:
       use-key-prefix: false
       cache-null-values: false
-      time-to-live: 10s
+      time-to-live: 1000s

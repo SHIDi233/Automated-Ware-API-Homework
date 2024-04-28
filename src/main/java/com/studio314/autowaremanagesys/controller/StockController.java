@@ -5,6 +5,9 @@ import com.studio314.autowaremanagesys.utils.JWTUtils;
 import com.studio314.autowaremanagesys.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +22,8 @@ public class StockController {
      * @return 货物列表
      */
     @GetMapping
+    @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
+    @Cacheable(cacheNames = "stock", key = "'stock:'+#wID")
     public Result query(@PathVariable("wID") int wID){
         return stockService.queryAllStocks(wID);
     }
@@ -32,6 +37,8 @@ public class StockController {
      * @return 结果
      */
     @PostMapping
+    @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
+    @CacheEvict(cacheNames = "stock", key = "'stock:'+#wID")
     public Result create(@PathVariable("wID") int wID, @RequestParam("cargoID") int cargoID, @RequestParam("stockNum") int stockNum, HttpServletRequest request){
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
@@ -50,6 +57,8 @@ public class StockController {
      * @return
      */
     @PutMapping
+    @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
+    @CacheEvict(cacheNames = "stock", key = "'stock:'+#wID")
     public Result out(@PathVariable("wID") int wID, @RequestParam("cargoID") int cargoID, @RequestParam("stockNum") int stockNum, HttpServletRequest request){
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);

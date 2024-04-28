@@ -5,11 +5,12 @@ import com.studio314.autowaremanagesys.utils.JWTUtils;
 import com.studio314.autowaremanagesys.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/{uID}/wares")
+@RequestMapping("/wares")
 public class WareController {
 
     @Autowired
@@ -29,7 +30,13 @@ public class WareController {
 
     //获取仓库列表
     @GetMapping("")
-    public Result query(@PathVariable int uID){
+    public Result query(HttpServletRequest request){
+        String token = request.getHeader("token");
+        String userIdStr = JWTUtils.getUserId(token);
+        if (userIdStr == null){
+            return Result.error("token错误");
+        }
+        int uID = Integer.parseInt(userIdStr);
         return ws.selectAll(uID);
     }
 

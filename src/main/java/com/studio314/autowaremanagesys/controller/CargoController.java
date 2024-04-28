@@ -4,6 +4,8 @@ import com.studio314.autowaremanagesys.pojo.Cargo;
 import com.studio314.autowaremanagesys.service.CargoService;
 import com.studio314.autowaremanagesys.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,7 @@ public class CargoController {
 
     //查看全部货物种类
     @GetMapping("")
-    @PreAuthorize("hasRole('admin')")
+    @Cacheable(cacheNames = "allCargos", key = "'allCargos'")
     public Result queryAllCargos() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<Cargo> list = cs.getAllCargos();
@@ -37,6 +39,7 @@ public class CargoController {
     //增加货物根种类
     @PostMapping("")
     @PreAuthorize("hasRole('admin')")
+    @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description) {
         cs.addCargo(name,description);
@@ -46,6 +49,7 @@ public class CargoController {
     //增加货物子种类
     @PostMapping("/{cargoID}")
     @PreAuthorize("hasRole('admin')")
+    @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestParam("cargoName") String name,
                            @RequestParam("cargoDescription") String description,
                            @PathVariable int cargoID) {
@@ -57,6 +61,7 @@ public class CargoController {
     //修改货物种类
     @PutMapping("/{cargoID}")
     @PreAuthorize("hasRole('admin')")
+    @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result updateCargo(@RequestParam("cargoName") String name,
                               @RequestParam("cargoDescription") String description,
                               @PathVariable int cargoID) {
@@ -67,6 +72,7 @@ public class CargoController {
     //删除货物种类
     @DeleteMapping("/{cargoID}")
     @PreAuthorize("hasRole('admin')")
+    @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result deleteCargo(@PathVariable int cargoID) {
         cs.deleteCargo(cargoID);
         return Result.success();

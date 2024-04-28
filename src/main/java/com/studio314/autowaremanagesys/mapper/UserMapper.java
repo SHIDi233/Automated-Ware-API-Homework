@@ -20,4 +20,10 @@ public interface UserMapper {
 
     @Insert("insert into User(uName, mail, password) values(#{name}, #{mail}, #{password})")
     void registerUser(String name, String mail, String password);
+
+    @Select("select uID from User where mail=#{email}")
+    int getIdByEmail(String email);
+
+    @Select("select uName from User where uID=#{uID}")
+    String getUserNameById(int uID);
 }
