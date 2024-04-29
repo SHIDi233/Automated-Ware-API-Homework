@@ -1,5 +1,6 @@
 package com.studio314.autowaremanagesys.controller;
 
+import com.studio314.autowaremanagesys.interceptor.Limiting;
 import com.studio314.autowaremanagesys.service.LoginService;
 import com.studio314.autowaremanagesys.utils.JWTUtils;
 import com.studio314.autowaremanagesys.utils.Result;
@@ -20,6 +21,7 @@ public class UserController {
     LoginService loginService;
 
     @PostMapping("/register")
+    @Limiting(limitNum = 1)
     public Result register(@RequestBody HashMap body){
         String name = (String) body.get("name");
         String mail = (String) body.get("mail");
@@ -28,6 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Limiting(limitNum = 1)
     public Result login(@RequestBody HashMap body) {
         String mail = (String) body.get("mail");
         String password = (String) body.get("password");
