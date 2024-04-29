@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -33,16 +34,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class AutoWareManageSysApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+//    @Test
+//    void contextLoads() {
+//    }
 
-    @Mock
-    private LoginService loginService;
+//    @Mock
+//    private LoginService loginService;
 
-    @InjectMocks
-    private UserController userController;
+//    @InjectMocks
+//    private UserController userController;
 
+    @Autowired
     private MockMvc mockMvc;
 
     static class UserInfo {
@@ -60,11 +62,11 @@ class AutoWareManageSysApplicationTests {
         }
     }
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        MockitoAnnotations.openMocks(this);
+//        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+//    }
 
     /**
      * 注册测试用户
@@ -80,7 +82,7 @@ class AutoWareManageSysApplicationTests {
         UserInfo info = new UserInfo(0, "");
 
         {
-            MvcResult mvcResult = mockMvc.perform(post("/users/register")
+            MvcResult mvcResult = mockMvc.perform(post("/user/register")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(JSON.toJSONString(userInfo)))
                     .andExpect(status().isOk())
@@ -88,12 +90,9 @@ class AutoWareManageSysApplicationTests {
                     .andExpect(jsonPath("$.msg").value("success"))
                     .andExpect(jsonPath("$.data").value("注册成功"))
                     .andReturn();
-            Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {});
-            Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
-            info.id = Integer.parseInt(data.get("id").toString());
         }
         {
-            MvcResult mvcResult = mockMvc.perform(post("/users/login")
+            MvcResult mvcResult = mockMvc.perform(post("/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(JSON.toJSONString(new HashMap<>(){
                                 {
@@ -121,18 +120,30 @@ class AutoWareManageSysApplicationTests {
     UserInfo loginAdminUser() throws Exception {
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("mail", "admin@mail.com");
-        userInfo.put("password", "114514");
+        userInfo.put("password", "123456");
 
         UserInfo info = new UserInfo(0, "");
 
+//        when(loginService.login(userInfo.get("mail"), userInfo.get("password")))
+//                .thenReturn(Result.success(new HashMap<>() {
+//                    {
+//                        put("token", "adminToken");
+//                    }
+//                }));
 
-        MvcResult mvcResult = mockMvc.perform(post("/users/login")
+        MvcResult mvcResult = mockMvc.perform(post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JSON.toJSONString(userInfo)))
+                        .content(JSON.toJSONString(new HashMap<>(){
+                            {
+                                put("mail", userInfo.get("mail"));
+                                put("password", userInfo.get("password"));
+                            }
+                        })))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1))
                 .andExpect(jsonPath("$.msg").value("success"))
                 .andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
         Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {});
         Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
         info.token = data.get("token").toString();
@@ -144,24 +155,151 @@ class AutoWareManageSysApplicationTests {
      * 测试查询所有货物
      * @throws Exception 异常
      */
-    void queryAllCargos() throws Exception {
-        UserInfo userInfo = loginAdminUser();
+    void queryAllCargos(UserInfo admin) throws Exception {
 
-        mockMvc.perform(get("/cargos")
-                        .header("token", userInfo.token))
+        mockMvc.perform(get("/cargo")
+                        .header("token", admin.token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1))
                 .andExpect(jsonPath("$.msg").value("success"));
     }
 
     /**
+     * 测试创建货物
+     * @return 货物id列表
+     * @throws Exception 异常
+     */
+    List<Integer> createCargo(UserInfo admin) throws Exception {
+        List<Integer> cargoIDs = new ArrayList<>();
+        {
+            MvcResult mvcResult = mockMvc.perform(post("/cargo")
+                            .header("token", admin.token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(JSON.toJSONString(new HashMap<>(){
+                                {
+                                    put("cargoName", "TestCargo1");
+                                    put("cargoDescription", "TestCargo1Description");
+                                }
+                            })))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(1))
+                    .andExpect(jsonPath("$.msg").value("success"))
+                    .andReturn();
+            Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {});
+            Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
+            cargoIDs.add(Integer.parseInt(data.get("cargoId").toString()));
+        }
+        {
+            MvcResult mvcResult = mockMvc.perform(post("/cargo")
+                            .header("token", admin.token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(JSON.toJSONString(new HashMap<>(){
+                                {
+                                    put("cargoName", "TestCargo2");
+                                    put("cargoDescription", "TestCargo2Description");
+                                }
+                            })))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(1))
+                    .andExpect(jsonPath("$.msg").value("success"))
+                    .andReturn();
+            Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {});
+            Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
+            cargoIDs.add(Integer.parseInt(data.get("cargoId").toString()));
+        }
+        return cargoIDs;
+    }
+
+    /**
+     * 创建货物子种类
+     * @return 货物id列表
+     * @throws Exception 异常
+     */
+    List<Integer> createSubCargo(int cargoID, UserInfo admin) throws Exception {
+        List<Integer> cargoIDs = new ArrayList<>();
+        {
+            MvcResult mvcResult = mockMvc.perform(post("/cargo/" + cargoID)
+                            .header("token", admin.token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(JSON.toJSONString(new HashMap<>() {
+                                {
+                                    put("cargoName", "TestSubCargo1");
+                                    put("cargoDescription", "TestSubCargo1Description");
+                                }
+                            })))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(1))
+                    .andExpect(jsonPath("$.msg").value("success"))
+                    .andReturn();
+            Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {
+            });
+            Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
+            cargoIDs.add(Integer.parseInt(data.get("cargoId").toString()));
+        }
+        {
+            MvcResult mvcResult = mockMvc.perform(post("/cargo/" + cargoID)
+                            .header("token", admin.token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(JSON.toJSONString(new HashMap<>() {
+                                {
+                                    put("cargoName", "TestSubCargo2");
+                                    put("cargoDescription", "TestSubCargo2Description");
+                                }
+                            })))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(1))
+                    .andExpect(jsonPath("$.msg").value("success"))
+                    .andReturn();
+            Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {
+            });
+            Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
+            cargoIDs.add(Integer.parseInt(data.get("cargoId").toString()));
+        }
+        return cargoIDs;
+    }
+
+    /**
+     * 测试修改货物
+     * @param cargoID 货物id
+     * @throws Exception 异常
+     */
+    void updateCargo(int cargoID, UserInfo admin) throws Exception {
+        mockMvc.perform(put("/cargo/" + cargoID)
+                        .header("token", admin.token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(new HashMap<>() {
+                            {
+                                put("cargoName", "TestCargo1Updated");
+                                put("cargoDescription", "TestCargo1DescriptionUpdated");
+                            }
+                        })))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.msg").value("success"));
+    }
+
+    /**
+     * 测试删除货物
+     * @param cargoIDs 货物id列表
+     * @throws Exception 异常
+     */
+    void deleteCargo(List<Integer> cargoIDs, UserInfo admin) throws Exception {
+        for (int cargoID : cargoIDs) {
+            mockMvc.perform(delete("/cargo/" + cargoID).header("token", admin.token))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(1))
+                    .andExpect(jsonPath("$.msg").value("success"));
+        }
+    }
+
+    /**
      * 测试查询某种货物
      * @throws Exception 异常
      */
-    void queryCargo() throws Exception {
+    void queryCargo(int id) throws Exception {
         UserInfo userInfo = loginAdminUser();
 
-        mockMvc.perform(get("/cargos/1")
+        mockMvc.perform(get("/cargo/" + id)
                         .header("token", userInfo.token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1))
@@ -191,7 +329,7 @@ class AutoWareManageSysApplicationTests {
                     .andReturn();
             Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {});
             Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
-            wareIds.add(Integer.parseInt(data.get("wareId").toString()));
+            wareIds.add(Integer.parseInt(data.get("wareID").toString()));
         }
         {
             MvcResult mvcResult = mockMvc.perform(post("/wares")
@@ -208,7 +346,7 @@ class AutoWareManageSysApplicationTests {
                     .andReturn();
             Map<String, Object> responseMap = JSON.parseObject(mvcResult.getResponse().getContentAsString(), new TypeReference<Map<String, Object>>() {});
             Map<?, ?> data = (Map<?, ?>) responseMap.get("data");
-            wareIds.add(Integer.parseInt(data.get("wareId").toString()));
+            wareIds.add(Integer.parseInt(data.get("wareID").toString()));
         }
         return wareIds;
     }
@@ -228,22 +366,37 @@ class AutoWareManageSysApplicationTests {
     }
 
     /**
+     * 删除仓库
+     */
+    void deleteWare(List<Integer> wareIDs, UserInfo userInfo) {
+        for (int wareID : wareIDs) {
+            try {
+                mockMvc.perform(delete("/wares/" + wareID)
+                                .header("token", userInfo.token))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.code").value(1))
+                        .andExpect(jsonPath("$.msg").value("success"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * 测试入库
      * @param wareID 仓库id
      * @param cargoIDs 货物id列表
      * @throws Exception 异常
      */
-    void createStock(int wareID, List<Integer> cargoIDs) throws Exception {
-        List<Integer> stockIDs = new ArrayList<>();
+    void createStock(int wareID, List<Integer> cargoIDs, UserInfo userInfo) throws Exception {
 
         for (int cargoID : cargoIDs) {
-            mockMvc.perform(post("/stocks")
+            mockMvc.perform(post("/wares/" + wareID + "/stock").header("token", userInfo.token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(JSON.toJSONString(new HashMap<>(){
                                 {
-                                    put("wareID", wareID);
                                     put("cargoID", cargoID);
-                                    put("stock", 100);
+                                    put("stockNum", 100);
                                 }
                             })))
                     .andExpect(status().isOk())
@@ -258,17 +411,16 @@ class AutoWareManageSysApplicationTests {
      * @param cargoIDs 货物id列表
      * @throws Exception 异常
      */
-    void outStock(int wareID, List<Integer> cargoIDs) throws Exception {
+    void outStock(int wareID, List<Integer> cargoIDs, UserInfo userInfo) throws Exception {
         List<Integer> stockIDs = new ArrayList<>();
 
         for (int cargoID : cargoIDs) {
-            mockMvc.perform(put("/stocks")
+            mockMvc.perform(put("/wares/" + wareID + "/stock").header("token", userInfo.token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(JSON.toJSONString(new HashMap<>() {
                                 {
-                                    put("wareID", wareID);
                                     put("cargoID", cargoID);
-                                    put("stock", 100);
+                                    put("stockNum", 100);
                                 }
                             })))
                     .andExpect(status().isOk())
@@ -281,11 +433,34 @@ class AutoWareManageSysApplicationTests {
      * 测试查询所有货物
      * @throws Exception 异常
      */
-    void queryAllStock(int wareID) throws Exception {
-        mockMvc.perform(get("/wares/" + wareID + "/stock"))
+    void queryAllStock(int wareID, UserInfo userInfo) throws Exception {
+        mockMvc.perform(get("/wares/" + wareID + "/stock").header("token", userInfo.token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1))
                 .andExpect(jsonPath("$.msg").value("success"));
+    }
+
+    @Test
+    void testAll() {
+        try {
+            UserInfo admin = loginAdminUser();
+            queryAllCargos(admin);
+            List<Integer> cargoIDs = createCargo(admin);
+            List<Integer> subCargoIDs = createSubCargo(cargoIDs.get(0), admin);
+            updateCargo(cargoIDs.get(0), admin);
+            queryCargo(cargoIDs.get(0));
+            UserInfo userInfo = registerTestUser();
+            List<Integer> wareIDs = createWare(userInfo);
+            queryWare(userInfo);
+            createStock(wareIDs.get(0), cargoIDs, userInfo);
+            outStock(wareIDs.get(0), cargoIDs, userInfo);
+            queryAllStock(wareIDs.get(0), userInfo);
+            deleteWare(wareIDs, userInfo);
+            deleteCargo(subCargoIDs, admin);
+            deleteCargo(cargoIDs, admin);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

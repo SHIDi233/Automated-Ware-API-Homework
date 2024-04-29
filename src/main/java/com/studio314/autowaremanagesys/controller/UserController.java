@@ -2,6 +2,7 @@ package com.studio314.autowaremanagesys.controller;
 
 import com.studio314.autowaremanagesys.interceptor.Limiting;
 import com.studio314.autowaremanagesys.service.LoginService;
+import com.studio314.autowaremanagesys.service.impl.LoginServerImpl;
 import com.studio314.autowaremanagesys.utils.JWTUtils;
 import com.studio314.autowaremanagesys.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +36,9 @@ public class UserController {
         String mail = (String) body.get("mail");
         String password = (String) body.get("password");
         log.info("用户尝试登录：" + mail);
-        return loginService.login(mail, password);
+        System.out.println(loginService);
+        Result login = loginService.login(mail, password);
+        System.out.println(login);
+        return login;
     }
 }
