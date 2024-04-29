@@ -37,6 +37,7 @@ public class LoginServerImpl implements LoginService {
 
     @Override
     public Result login(String mail, String password) {
+        log.info("用户尝试登录server：" + mail);
         //AuthenticationManager authenticate 进行用户认证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(mail, password);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
