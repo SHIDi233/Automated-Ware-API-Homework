@@ -34,16 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class AutoWareManageSysApplicationTests {
 
-//    @Test
-//    void contextLoads() {
-//    }
-
-//    @Mock
-//    private LoginService loginService;
-
-//    @InjectMocks
-//    private UserController userController;
-
     @Autowired
     private MockMvc mockMvc;
 
