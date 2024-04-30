@@ -1,8 +1,10 @@
 package com.studio314.autowaremanagesys.controller;
 
+import com.studio314.autowaremanagesys.interceptor.Limiting;
 import com.studio314.autowaremanagesys.pojo.Cargo;
 import com.studio314.autowaremanagesys.service.CargoService;
 import com.studio314.autowaremanagesys.utils.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,14 +18,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/cargo")
+@Slf4j
 public class CargoController {
     @Autowired
     CargoService cs;
 
     //查看全部货物种类
     @GetMapping("")
+    @Limiting(limitNum = 10)
     @Cacheable(cacheNames = "allCargos", key = "'allCargos'")
     public Result queryAllCargos() {
+        log.info("查询了全部货物种类");
         List<Map<String, Object>> result = new ArrayList<>();
         List<Cargo> list = cs.getAllCargos();
         return Result.success(getCargoList(-1,list));
@@ -31,24 +36,32 @@ public class CargoController {
 
     //查看某种货物种类
     @GetMapping("/{id}")
+    @Limiting(limitNum = 10)
     public Result queryCargo(@PathVariable("id") int id) {
+        log.info("查询了"+String.valueOf(id)+"货物种类");
         Cargo cg = cs.getCargo(id);
         return Result.success(cg);
     }
 
     //增加货物根种类
     @PostMapping("")
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestBody HashMap body) {
-        String name = (String)body.get("cargoName");
-        String description = (String)body.get("cargoDescription");
+        String name = (String)body.get("name");
+        String description = (String)body.get("description");
+        log.info("{}-{}", name, description);
         int i = cs.addCargo(name, description);
+
+        log.info("增加了"+name+"根种类");
+
         return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
     //增加货物子种类
     @PostMapping("/{cargoID}")
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestBody HashMap body,@PathVariable int cargoID) {
@@ -57,11 +70,15 @@ public class CargoController {
         int parent = cargoID;
         cs.addCargo(name,description,parent);
         int i = cs.addCargo(name, description);
+
+        log.info("增加了"+name+"子种类");
+
         return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
     //修改货物种类
     @PutMapping("/{cargoID}")
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result updateCargo(@RequestBody HashMap body,
@@ -69,15 +86,21 @@ public class CargoController {
         String name = (String)body.get("cargoName");
         String description = (String)body.get("cargoDescription");
         cs.updateCargo(cargoID ,name,description);
+
+        log.info("修改了"+name+"种类");
+
         return Result.success();
     }
 
     //删除货物种类
     @DeleteMapping("/{cargoID}")
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result deleteCargo(@PathVariable int cargoID) {
         cs.deleteCargo(cargoID);
+
+        log.info("删除了"+cargoID+"种类");
         return Result.success();
     }
 
