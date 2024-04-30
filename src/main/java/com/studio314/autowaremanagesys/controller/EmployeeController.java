@@ -20,7 +20,7 @@ public class EmployeeController {
 
     //获得所有员工
     @GetMapping
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#wID,'controller')")
     @Cacheable(cacheNames = "employee", key = "'employee:'+#wID")
     public Result getEmployee(@PathVariable int wID) {
@@ -29,7 +29,7 @@ public class EmployeeController {
 
     //添加员工
     @PostMapping
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#wID,'controller')")
     @CacheEvict(cacheNames = "employee", key = "'employee:'+#wID")
     public Result addEmployee(@PathVariable int wID, @RequestBody HashMap body){
@@ -40,7 +40,7 @@ public class EmployeeController {
 
     //删除员工
     @DeleteMapping("/{uID}")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#wID,'controller')")
     @CacheEvict(cacheNames = "employee", key = "'employee:'+#wID")
     public Result deleteEmployee(@PathVariable int uID,@PathVariable int wID){

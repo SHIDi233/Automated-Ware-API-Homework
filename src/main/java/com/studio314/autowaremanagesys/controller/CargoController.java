@@ -4,6 +4,7 @@ import com.studio314.autowaremanagesys.interceptor.Limiting;
 import com.studio314.autowaremanagesys.pojo.Cargo;
 import com.studio314.autowaremanagesys.service.CargoService;
 import com.studio314.autowaremanagesys.utils.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,13 +18,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/cargo")
+@Slf4j
 public class CargoController {
     @Autowired
     CargoService cs;
 
     //查看全部货物种类
     @GetMapping("")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @Cacheable(cacheNames = "allCargos", key = "'allCargos'")
     public Result queryAllCargos() {
         List<Map<String, Object>> result = new ArrayList<>();
@@ -33,7 +35,7 @@ public class CargoController {
 
     //查看某种货物种类
     @GetMapping("/{id}")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     public Result queryCargo(@PathVariable("id") int id) {
         Cargo cg = cs.getCargo(id);
         return Result.success(cg);
@@ -41,19 +43,20 @@ public class CargoController {
 
     //增加货物根种类
     @PostMapping("")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestBody HashMap body) {
-        String name = (String)body.get("cargoName");
-        String description = (String)body.get("cargoDescription");
+        String name = (String)body.get("name");
+        String description = (String)body.get("description");
+        log.info("{}-{}", name, description);
         int i = cs.addCargo(name, description);
         return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
     //增加货物子种类
     @PostMapping("/{cargoID}")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result addCargo(@RequestBody HashMap body,@PathVariable int cargoID) {
@@ -67,7 +70,7 @@ public class CargoController {
 
     //修改货物种类
     @PutMapping("/{cargoID}")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result updateCargo(@RequestBody HashMap body,
@@ -80,7 +83,7 @@ public class CargoController {
 
     //删除货物种类
     @DeleteMapping("/{cargoID}")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasRole('admin')")
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result deleteCargo(@PathVariable int cargoID) {

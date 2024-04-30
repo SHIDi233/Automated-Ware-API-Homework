@@ -22,7 +22,7 @@ public class UserController {
     LoginService loginService;
 
     @PostMapping("/register")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     public Result register(@RequestBody HashMap body){
         String name = (String) body.get("name");
         String mail = (String) body.get("mail");
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     public Result login(@RequestBody HashMap body) {
         String mail = (String) body.get("mail");
         String password = (String) body.get("password");

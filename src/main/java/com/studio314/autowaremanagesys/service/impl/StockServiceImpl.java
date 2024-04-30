@@ -44,7 +44,7 @@ public class StockServiceImpl implements StockService {
     @Override
     @CacheEvict(cacheNames = "waresCargo", key = "#wID")
     public Result createStock(int wID, int cargoID, int stockNum) {
-
+        System.out.println(cargoID);
         if (stockNum <= 0) {
             return Result.error("数量必须大于0");
         }

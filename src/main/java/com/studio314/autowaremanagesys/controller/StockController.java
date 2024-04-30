@@ -25,7 +25,7 @@ public class StockController {
      * @return 货物列表
      */
     @GetMapping
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
     @Cacheable(cacheNames = "stock", key = "'stock:'+#wID")
     public Result query(@PathVariable("wID") int wID){
@@ -41,7 +41,7 @@ public class StockController {
      * @return 结果
      */
     @PostMapping
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
     @CacheEvict(cacheNames = "stock", key = "'stock:'+#wID")
     public Result create(@RequestBody HashMap body, @PathVariable("wID") int wID, HttpServletRequest request){
@@ -64,7 +64,7 @@ public class StockController {
      * @return
      */
     @PutMapping
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
     @CacheEvict(cacheNames = "stock", key = "'stock:'+#wID")
     public Result out(@RequestBody HashMap body,@PathVariable("wID") int wID, HttpServletRequest request){

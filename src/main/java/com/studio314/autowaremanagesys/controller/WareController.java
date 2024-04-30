@@ -21,7 +21,7 @@ public class WareController {
 
     //创建仓库
     @PostMapping("")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     public Result create(@RequestBody HashMap body,HttpServletRequest request){
         String wareName = (String)body.get("wareName");
         String token = request.getHeader("token");
@@ -35,7 +35,7 @@ public class WareController {
 
     //获取仓库列表
     @GetMapping("")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     public Result query(HttpServletRequest request){
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
@@ -48,7 +48,7 @@ public class WareController {
 
     //删除仓库
     @DeleteMapping("/{id}")
-    @Limiting(limitNum = 1)
+    @Limiting(limitNum = 10)
     @PreAuthorize("hasPermission(#id,'controller')")
     public Result delete(@PathVariable int id,HttpServletRequest request){
         String token = request.getHeader("token");
