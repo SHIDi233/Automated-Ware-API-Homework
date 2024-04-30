@@ -54,6 +54,7 @@ public class RateLimitAspect {
             log.info("处理完成");
             return point.proceed();
         } else {
+            log.info("访问速率过快，已限速");
             throw new RuntimeException("服务器繁忙，请稍后再试。");
         }
     }

@@ -5,6 +5,7 @@ import com.studio314.autowaremanagesys.service.StockService;
 import com.studio314.autowaremanagesys.utils.JWTUtils;
 import com.studio314.autowaremanagesys.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/wares/{wID}/stock")
+@Slf4j
 public class StockController {
 
     @Autowired
@@ -29,6 +31,7 @@ public class StockController {
     @PreAuthorize("hasPermission(#wID,'controller') or hasPermission(#wID,'user')")
     @Cacheable(cacheNames = "stock", key = "'stock:'+#wID")
     public Result query(@PathVariable("wID") int wID){
+        log.info("查询了wID:{}的所有货物",wID);
         return stockService.queryAllStocks(wID);
     }
 
@@ -49,6 +52,7 @@ public class StockController {
         int stockNum = (int)body.get("stockNum");
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
+        log.info("userIdStr:{} 入库cargoID:{} 数目:{}",userIdStr,cargoID,stockNum);
         if (userIdStr == null) {
             return Result.error("您没有访问此的权限");
         }
@@ -72,6 +76,7 @@ public class StockController {
         int stockNum = (int)body.get("stockNum");
         String token = request.getHeader("token");
         String userIdStr = JWTUtils.getUserId(token);
+        log.info("userIdStr:{} 出库cargoID:{} 数目:{}",userIdStr,cargoID,stockNum);
         if (userIdStr == null) {
             return Result.error("您没有访问此的权限");
         }

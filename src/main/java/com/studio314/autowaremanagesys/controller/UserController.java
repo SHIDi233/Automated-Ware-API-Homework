@@ -27,6 +27,8 @@ public class UserController {
         String name = (String) body.get("name");
         String mail = (String) body.get("mail");
         String password = (String) body.get("password");
+
+        log.info("name:{}尝试注册",name);
         return loginService.register(name, mail, password);
     }
 

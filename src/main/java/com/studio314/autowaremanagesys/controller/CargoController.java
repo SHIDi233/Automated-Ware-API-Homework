@@ -28,6 +28,7 @@ public class CargoController {
     @Limiting(limitNum = 10)
     @Cacheable(cacheNames = "allCargos", key = "'allCargos'")
     public Result queryAllCargos() {
+        log.info("查询了全部货物种类");
         List<Map<String, Object>> result = new ArrayList<>();
         List<Cargo> list = cs.getAllCargos();
         return Result.success(getCargoList(-1,list));
@@ -37,6 +38,7 @@ public class CargoController {
     @GetMapping("/{id}")
     @Limiting(limitNum = 10)
     public Result queryCargo(@PathVariable("id") int id) {
+        log.info("查询了"+String.valueOf(id)+"货物种类");
         Cargo cg = cs.getCargo(id);
         return Result.success(cg);
     }
@@ -51,6 +53,9 @@ public class CargoController {
         String description = (String)body.get("description");
         log.info("{}-{}", name, description);
         int i = cs.addCargo(name, description);
+
+        log.info("增加了"+name+"根种类");
+
         return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
@@ -65,6 +70,9 @@ public class CargoController {
         int parent = cargoID;
         cs.addCargo(name,description,parent);
         int i = cs.addCargo(name, description);
+
+        log.info("增加了"+name+"子种类");
+
         return Result.success(new HashMap<>() {{put("cargoId", i);}});
     }
 
@@ -78,6 +86,9 @@ public class CargoController {
         String name = (String)body.get("cargoName");
         String description = (String)body.get("cargoDescription");
         cs.updateCargo(cargoID ,name,description);
+
+        log.info("修改了"+name+"种类");
+
         return Result.success();
     }
 
@@ -88,6 +99,8 @@ public class CargoController {
     @CacheEvict(cacheNames = "allCargos", key = "'allCargos'")
     public Result deleteCargo(@PathVariable int cargoID) {
         cs.deleteCargo(cargoID);
+
+        log.info("删除了"+cargoID+"种类");
         return Result.success();
     }
 
