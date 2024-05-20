@@ -1,7 +1,7 @@
 package com.studio314.autowaremanagesys.router;
 
 
-import com.studio314.autowaremanagesys.handler.WareHandler;
+import com.studio314.autowaremanagesys.handler.UserHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -12,15 +12,14 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 
 @Configuration(proxyBeanMethods = false)
-public class WareRouter {
+public class UserRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> wareRoute(WareHandler wareHandler) {
+    public RouterFunction<ServerResponse> userRoute(UserHandler userHandler) {
         return RouterFunctions.route()
-                .path("/v2/wares", builder -> builder
-                        .POST(accept(MediaType.APPLICATION_JSON), wareHandler::create)
-                        .GET(accept(MediaType.APPLICATION_JSON), wareHandler::query)
-                        .DELETE("/{id}", accept(MediaType.APPLICATION_JSON), wareHandler::delete)
+                .path("/v2/users", builder -> builder
+                        .POST("/register", accept(MediaType.APPLICATION_JSON), userHandler::register)
+                        .POST("/login", accept(MediaType.APPLICATION_JSON), userHandler::login)
                 )
                 .build();
     }

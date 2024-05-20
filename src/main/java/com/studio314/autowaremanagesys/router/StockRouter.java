@@ -1,7 +1,7 @@
 package com.studio314.autowaremanagesys.router;
 
 
-import com.studio314.autowaremanagesys.handler.WareHandler;
+import com.studio314.autowaremanagesys.handler.StockHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -12,15 +12,15 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 
 @Configuration(proxyBeanMethods = false)
-public class WareRouter {
+public class StockRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> wareRoute(WareHandler wareHandler) {
+    public RouterFunction<ServerResponse> stockRoute(StockHandler stockHandler) {
         return RouterFunctions.route()
-                .path("/v2/wares", builder -> builder
-                        .POST(accept(MediaType.APPLICATION_JSON), wareHandler::create)
-                        .GET(accept(MediaType.APPLICATION_JSON), wareHandler::query)
-                        .DELETE("/{id}", accept(MediaType.APPLICATION_JSON), wareHandler::delete)
+                .path("/v2/wares/{wID}/stock", builder -> builder
+                        .POST(accept(MediaType.APPLICATION_JSON), stockHandler::create)
+                        .GET(accept(MediaType.APPLICATION_JSON), stockHandler::query)
+                        .PUT("/{id}", accept(MediaType.APPLICATION_JSON), stockHandler::out)
                 )
                 .build();
     }
