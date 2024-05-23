@@ -8,7 +8,6 @@ import com.studio314.autowaremanagesys.pojo.Stock;
 import com.studio314.autowaremanagesys.service.EmployeeService;
 import com.studio314.autowaremanagesys.utils.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

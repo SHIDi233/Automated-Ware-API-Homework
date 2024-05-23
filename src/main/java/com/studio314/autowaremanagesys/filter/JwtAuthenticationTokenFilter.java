@@ -6,10 +6,6 @@ import com.studio314.autowaremanagesys.config.RedisCache;
 import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.utils.JWTUtils;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +30,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private RedisCache redisCache;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ServletException {
+    protected void doFilterInternal(ServerRequest request, ServerResponse response, Chain filterChain) throws ServletException, IOException, ServletException {
         //获取token
         String token = request.getHeader("token");
         if (!StringUtils.hasText(token)) {

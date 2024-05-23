@@ -1,6 +1,6 @@
 package com.studio314.autowaremanagesys.pojo;
 
-import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
+//import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
