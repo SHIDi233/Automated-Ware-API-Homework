@@ -2,6 +2,7 @@ package com.studio314.autowaremanagesys.service;
 
 import com.studio314.autowaremanagesys.config.SecurityGrantedAuthority;
 import com.studio314.autowaremanagesys.mapper.UserMapper;
+//import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.pojo.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;

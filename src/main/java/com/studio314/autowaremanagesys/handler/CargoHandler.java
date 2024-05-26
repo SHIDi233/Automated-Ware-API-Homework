@@ -3,6 +3,7 @@ package com.studio314.autowaremanagesys.handler;
 import com.studio314.autowaremanagesys.pojo.Cargo;
 import com.studio314.autowaremanagesys.service.CargoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import com.studio314.autowaremanagesys.utils.Result;
 import org.springframework.http.MediaType;
@@ -34,16 +35,18 @@ public class CargoHandler {
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(Result.success(cg));
     }
 
+    @PreAuthorize("hasRole('admin')")
     public Mono<ServerResponse> addCargoRoot(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {
-                    String name = (String) body.get("name");
-                    String description = (String) body.get("description");
+                    String name = (String) body.get("cargoName");
+                    String description = (String) body.get("cargoDescription");
                     int i = cargoService.addCargo(name, description);
                     return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(Result.success(new HashMap<>() {{put("cargoId", i);}}));
                 });
     }
 
+    @PreAuthorize("hasRole('admin')")
     public Mono<ServerResponse> addCargo(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {
@@ -55,12 +58,14 @@ public class CargoHandler {
                 });
     }
 
+    @PreAuthorize("hasRole('admin')")
     public Mono<ServerResponse> deleteCargo(ServerRequest request) {
-        int id = Integer.parseInt(request.pathVariable("id"));
+        int id = Integer.parseInt(request.pathVariable("cargoID"));
         cargoService.deleteCargo(id);
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(Result.success());
     }
 
+    @PreAuthorize("hasRole('admin')")
     public Mono<ServerResponse> updateCargo(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {

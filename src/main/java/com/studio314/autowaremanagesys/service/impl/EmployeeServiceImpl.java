@@ -42,7 +42,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Result addEmployee(int wareID, String email, String role){
+        System.out.println("email"+email);
         int uid=um.getIdByEmail(email);
+        System.out.println("uid"+uid);
         em.add(uid,role,wareID);
         return Result.success();
     }

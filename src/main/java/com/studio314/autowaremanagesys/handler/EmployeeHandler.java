@@ -2,6 +2,7 @@ package com.studio314.autowaremanagesys.handler;
 
 import com.studio314.autowaremanagesys.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import com.studio314.autowaremanagesys.utils.Result;
 import org.springframework.http.MediaType;
@@ -22,21 +23,24 @@ public class EmployeeHandler {
     @Autowired
     EmployeeService employeeService;
 
+    @PreAuthorize("hasPermission(#request.pathVariable(\"wID\"),'controller')")
     public Mono<ServerResponse> getEmployee(ServerRequest request) {
-        int id = Integer.parseInt(request.pathVariable("id"));
+        int id = Integer.parseInt(request.pathVariable("wID"));
         return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(Result.success(employeeService.getEmployee(id)));
     }
 
+    @PreAuthorize("hasPermission(#request.pathVariable('wID'),'controller')")
     public Mono<ServerResponse> addEmployee(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {
-                    String name = (String) body.get("name");
-                    String mail = (String) body.get("mail");
+                    String role = (String) body.get("role");
+                    String mail = (String) body.get("email");
                     int wID = Integer.parseInt(request.pathVariable("wID"));
-                    return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(employeeService.addEmployee(wID, name, mail));
+                    return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(employeeService.addEmployee(wID, mail, role));
                 });
     }
 
+    @PreAuthorize("hasPermission(#request.pathVariable('wID'),'controller')")
     public Mono<ServerResponse> deleteEmployee(ServerRequest request) {
         int uID = Integer.parseInt(request.pathVariable("uID"));
         int wID = Integer.parseInt(request.pathVariable("wID"));

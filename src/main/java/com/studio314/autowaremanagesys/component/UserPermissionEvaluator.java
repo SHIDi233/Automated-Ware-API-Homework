@@ -2,6 +2,7 @@ package com.studio314.autowaremanagesys.component;
 
 import com.studio314.autowaremanagesys.mapper.EmployeeMapper;
 import com.studio314.autowaremanagesys.mapper.WareMapper;
+//import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.pojo.LoginUser;
 import com.studio314.autowaremanagesys.pojo.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
     public boolean hasPermission(Authentication authentication, Object targetUrl, Object permission) {
         Object principal = authentication.getPrincipal();
         int userID=((LoginUser) principal).getUser().getUID();
+//        int userID=1;
 
         System.out.println("UserPermissionEvaluator1 hasPermission!!!");
         System.out.println(userID);
@@ -38,15 +40,15 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
 
         //搜索仓库表
         if(permission.equals("controller")){
-            System.out.println(wm.checkCreator((int)targetUrl,userID));
-            if(wm.checkCreator((int)targetUrl,userID)!=null)
+            System.out.println(wm.checkCreator(Integer.parseInt((String) targetUrl),userID));
+            if(wm.checkCreator(Integer.parseInt((String) targetUrl),userID)!=null)
                 return true;
             else
                 return false;
         }
         //搜索大表
         else if(permission.equals("user")){
-            if(em.check(userID,(int)targetUrl)!=null)
+            if(em.check(userID,Integer.parseInt((String) targetUrl))!=null)
                 return true;
             else
                 return false;
@@ -57,7 +59,6 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-        System.out.println("UserPermissionEvaluator2 hasPermission!!!");
         System.out.println("UserPermissionEvaluator2 hasPermission!!!");
         return true;
     }

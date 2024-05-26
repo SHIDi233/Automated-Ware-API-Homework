@@ -20,7 +20,7 @@ public class StockRouter {
                 .path("/v2/wares/{wID}/stock", builder -> builder
                         .POST(accept(MediaType.APPLICATION_JSON), stockHandler::create)
                         .GET(accept(MediaType.APPLICATION_JSON), stockHandler::query)
-                        .PUT("/{id}", accept(MediaType.APPLICATION_JSON), stockHandler::out)
+                        .PUT(accept(MediaType.APPLICATION_JSON), stockHandler::out)
                 )
                 .build();
     }

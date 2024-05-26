@@ -1,7 +1,9 @@
 package com.studio314.autowaremanagesys.handler;
 
+import com.studio314.autowaremanagesys.interceptor.Limiting;
 import com.studio314.autowaremanagesys.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import com.studio314.autowaremanagesys.utils.Result;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ public class UserHandler {
     @Autowired
     LoginService loginService;
 
+    @Limiting(limitNum = 10)
     public Mono<ServerResponse> register(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {
@@ -30,6 +33,7 @@ public class UserHandler {
                 });
     }
 
+    @Limiting(limitNum = 10)
     public Mono<ServerResponse> login(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {

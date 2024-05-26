@@ -1,10 +1,10 @@
 package com.studio314.autowaremanagesys.config;
 
-import jakarta.servlet.http.HttpServletRequest;
+import io.netty.handler.codec.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 
-public class DefaultAuthenticationManagerResolver implements AuthenticationManagerResolver<HttpServletRequest> {
+public class DefaultAuthenticationManagerResolver implements AuthenticationManagerResolver<HttpRequest> {
 
     private final AuthenticationManager authenticationManager;
 
@@ -13,7 +13,7 @@ public class DefaultAuthenticationManagerResolver implements AuthenticationManag
     }
 
     @Override
-    public AuthenticationManager resolve(HttpServletRequest context) {
+    public AuthenticationManager resolve(HttpRequest context) {
         return authenticationManager;
     }
 }
