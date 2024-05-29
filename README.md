@@ -1,4 +1,4 @@
-# assignment1-javaEE
+# Automated Warehouse Management System
 
 ## API Design
 
@@ -21,6 +21,53 @@
 ​	<img src="images/image-20240429203532182.png" alt="image-20240429203532182" style="zoom:50%;" /> 
 
 ​	<img src="images/image-20240429203618941.png" alt="image-20240429203618941" style="zoom:33%;" /> 
+
+
+### WebFlux and Routing (without annotation)
+
+**Environment：**
+
+-  spring-boot-starter-webflux - 3.2.5
+
+
+
+**Implement：**
+
+​	We use ***handler*** to substitute the controller, and change the return type to ***Mono***.
+
+```java
+@Component
+public class CargoHandler {
+
+    @Autowired
+    CargoService cargoService;
+
+    public Mono<ServerResponse> queryAllCargos(ServerRequest request) {
+        return ok().contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(Result.success(getCargoList(-1, cargoService.getAllCargos())));
+    }
+    
+//    ...
+}
+```
+
+And then, we use router to redirect the request to the handler.
+
+```java
+@Configuration(proxyBeanMethods = false)
+public class UserRouter {
+    @Bean
+    public RouterFunction<ServerResponse> userRoute(UserHandler userHandler) {
+        return RouterFunctions.route()
+                .path("/v2/users", builder -> builder
+                        .POST("/register", accept(MediaType.APPLICATION_JSON), userHandler::register)
+                        .POST("/login", accept(MediaType.APPLICATION_JSON), userHandler::login)
+                )
+                .build();
+    }
+}
+```
+
 
 
 
