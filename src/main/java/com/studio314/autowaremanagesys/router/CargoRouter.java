@@ -20,8 +20,8 @@ public class CargoRouter {
                 .path("/v2/cargo", builder -> builder
                         .GET(accept(MediaType.APPLICATION_JSON), cargoHandler::queryAllCargos)
                         .GET("/{cargoID}", accept(MediaType.APPLICATION_JSON), cargoHandler::queryCargo)
-                        .POST(accept(MediaType.APPLICATION_JSON), cargoHandler::addCargoRoot)
                         .POST("/{cargoID}", accept(MediaType.APPLICATION_JSON), cargoHandler::addCargo)
+                        .POST(accept(MediaType.APPLICATION_JSON), cargoHandler::addCargoRoot)
                         .PUT("/{cargoID}", accept(MediaType.APPLICATION_JSON), cargoHandler::updateCargo)
                         .DELETE("/{cargoID}", accept(MediaType.APPLICATION_JSON), cargoHandler::deleteCargo)
                 )

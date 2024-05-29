@@ -39,7 +39,7 @@ public class CargoHandler {
     public Mono<ServerResponse> addCargoRoot(ServerRequest request) {
         return request.bodyToMono(HashMap.class)
                 .flatMap(body -> {
-                    String name = (String) body.get("cargoName");
+                    String name = (String) body.get("name");
                     String description = (String) body.get("cargoDescription");
                     int i = cargoService.addCargo(name, description);
                     return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(Result.success(new HashMap<>() {{put("cargoId", i);}}));
@@ -53,6 +53,7 @@ public class CargoHandler {
                     String name = (String) body.get("cargoName");
                     String description = (String) body.get("cargoDescription");
                     int parent = Integer.parseInt(request.pathVariable("cargoID"));
+                    System.out.print("parent:"+parent);
                     int i = cargoService.addCargo(name, description, parent);
                     return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(Result.success(new HashMap<>() {{put("cargoId", i);}}));
                 });
