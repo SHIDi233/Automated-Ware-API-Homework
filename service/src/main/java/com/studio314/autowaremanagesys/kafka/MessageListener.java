@@ -2,9 +2,9 @@ package com.studio314.autowaremanagesys.kafka;
 
 import com.alibaba.fastjson2.JSON;
 import com.studio314.autowaremanagesys.pojo.Order;
-import com.studio314.autowaremanagesys.pojo.dto.OrderMsgDTO;
 import com.studio314.autowaremanagesys.service.OrderService;
 import com.studio314.autowaremanagesys.service.StockService;
+import domain.dto.OrderMsgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public class MessageListener {
         if (m.getType() == 1) {
             orderService.modifyOrder(m.getNumber(), Order.OrderState.IN_PROCESSING.getStateNum());
         } else if (m.getType() == 2) {
-            stockService.outStock(m.getWareID(), m.getCargoID(), m.getNum());
+//            stockService.outStock(m.getWareID(), m.getCargoID(), m.getNum());
             orderService.modifyOrder(m.getNumber(), Order.OrderState.OUT_PROCESSING.getStateNum());
         }
     }

@@ -1,7 +1,7 @@
 package com.studio314.autowaremanagesys.mapper;
 
 import com.studio314.autowaremanagesys.pojo.Order;
-import com.studio314.autowaremanagesys.pojo.dto.OrderMsgDTO;
+import domain.dto.OrderMsgDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

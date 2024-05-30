@@ -7,10 +7,10 @@ import com.studio314.autowaremanagesys.mapper.StockMapper;
 import com.studio314.autowaremanagesys.pojo.Cargo;
 import com.studio314.autowaremanagesys.pojo.Order;
 import com.studio314.autowaremanagesys.pojo.Stock;
-import com.studio314.autowaremanagesys.pojo.dto.OrderMsgDTO;
 import com.studio314.autowaremanagesys.service.OrderService;
 import com.studio314.autowaremanagesys.service.StockService;
 import com.studio314.autowaremanagesys.utils.Result;
+import domain.dto.OrderMsgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

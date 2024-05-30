@@ -1,7 +1,7 @@
 package com.studio314.autowaremanagesys.kafka;
 
 import com.alibaba.fastjson2.JSON;
-import com.studio314.autowaremanagesys.pojo.dto.OrderMsgDTO;
+import domain.dto.OrderMsgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
