@@ -39,6 +39,7 @@ public class UserHandler {
                 .flatMap(body -> {
                     String mail = (String) body.get("mail");
                     String password = (String) body.get("password");
+                    System.out.println(mail+":"+password);
                     Result result = loginService.login(mail, password);
                     return ok().contentType(MediaType.APPLICATION_JSON).bodyValue(result);
                 });
